@@ -1,0 +1,35 @@
+[include]
+    path = ~/.gitconfig.local
+[core]
+	excludesfile = ~/.gitignore
+	autocrlf = input
+	ignorecase = false
+	editor = vim
+	pager = less -F -X
+	whitespace = trailing-space,space-before-tab,tab-in-indent
+[user]
+	name = Samuel Parkinson
+[push]
+	default = current
+[difftool]
+	prompt = false
+[mergetool]
+	prompt = false
+	keepBackup = false
+[rerere]
+	enabled = true
+[alias]
+	lol = log --graph --decorate --oneline
+	amend = commit --amend --reset-author
+	branches = branch -vv
+	remotes = remote -v
+	tags = tag -n99 --list
+[remote "origin"]
+	prune = true
+[log]
+	abbrevCommit = true
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto

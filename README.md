@@ -7,7 +7,7 @@ Personal fork of [cowboy/dotfiles][1].
 ## Usage
 
 ```bash
-$ bash -c "$(curl -fsSL https://raw.github.com/sjparkinson/dotfiles/master/bin/dotfiles)" && source ~/.zshrc
+$ bash -c "$(curl -fsSL https://raw.github.com/sjparkinson/dotfiles/master/bin/dotfiles)" && source ~/.bashrc
 ```
 
 ## License

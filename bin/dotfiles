@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 [[ "$1" == "source" ]] || \
 
 echo 'Dotfiles - "Cowboy" Ben Alman - http://benalman.com/'
@@ -25,10 +24,10 @@ exit; fi
 export DOTFILES=~/.dotfiles
 
 # Logging stuff.
-function e_header()   { echo -e "\n\033[1m$*\033[0m"; }
-function e_success()  { echo -e " \033[1;32m✔\033[0m  $*"; }
-function e_error()    { echo -e " \033[1;31m✖\033[0m  $*"; }
-function e_arrow()    { echo -e " \033[1;34m➜\033[0m  $*"; }
+function e_header()   { echo -e "\n\033[1m$@\033[0m"; }
+function e_success()  { echo -e " \033[1;32m✔\033[0m  $@"; }
+function e_error()    { echo -e " \033[1;31m✖\033[0m  $@"; }
+function e_arrow()    { echo -e " \033[1;34m➜\033[0m  $@"; }
 
 # For testing.
 function assert() {
@@ -48,7 +47,7 @@ function is_ubuntu() {
 }
 function get_os() {
   for os in osx ubuntu; do
-    is_$os; [[ $? == {1:-0} ]] && echo $os
+    is_$os; [[ $? == ${1:-0} ]] && echo $os
   done
 }
 
@@ -66,7 +65,7 @@ function path_remove() {
 # Display a fancy multi-select menu.
 # Inspired by http://serverfault.com/a/298312
 function prompt_menu() {
-  local exitcode prompt nums i n
+  local exitcode prompt choices nums i n
   exitcode=0
   if [[ "$2" ]]; then
     _prompt_menu_draws "$1"
@@ -206,8 +205,8 @@ function copy_test() {
   fi
 }
 function copy_do() {
-  e_success "Copying ~/${3#$HOME/}."
-  cp "$2" $3
+  e_success "Copying ~/$1."
+  cp "$2" ~/
 }
 
 # Link files.
@@ -216,8 +215,8 @@ function link_test() {
   [[ "$1" -ef "$2" ]] && echo "same file"
 }
 function link_do() {
-  e_success "Linking ~/${3#$HOME/}."
-  ln -sf ${2#$HOME/} $3
+  e_success "Linking ~/$1."
+  ln -sf ${2#$HOME/} ~/
 }
 
 # Copy, link, init, etc.
@@ -231,7 +230,6 @@ function do_stuff() {
   [[ $(declare -f "$1_header") ]] && "$1_header"
   # Iterate over files.
   for file in "${files[@]}"; do
-      echo $file
     base="$(basename $file)"
     dest="$HOME/$base"
     # Run _test function only if declared.
@@ -254,7 +252,7 @@ function do_stuff() {
       fi
     fi
     # Do stuff.
-    "$1_do" "$base" "$file" "$dest"
+    "$1_do" "$base" "$file"
   done
 }
 
@@ -272,9 +270,7 @@ fi
 # with recent XCode or CLT)
 if [[ ! "$(type -P git)" ]] && is_ubuntu; then
   e_header "Installing Git"
-  sudo add-apt-repository ppa:pdoes/ppa
-  sudo apt-get update
-  sudo apt-get -qq install git
+  sudo apt-get -qq install git-core
 fi
 
 # If Git isn't installed by now, something exploded. We gots to quit!
@@ -286,9 +282,10 @@ fi
 # Initialize.
 if [[ ! -d $DOTFILES ]]; then
   # $DOTFILES directory doesn't exist? Clone it!
+  new_dotfiles_install=1
   prompt_delay=15
   e_header "Downloading dotfiles"
-  git clone --recursive https://github.com/sjparkinson/dotfiles.git $DOTFILES
+  git clone --recursive git://github.com/${github_user:-cowboy}/dotfiles.git $DOTFILES
   cd $DOTFILES
 elif [[ "$1" != "restart" ]]; then
   # Make sure we have the latest files.
@@ -296,9 +293,10 @@ elif [[ "$1" != "restart" ]]; then
   cd $DOTFILES
   prev_head="$(git rev-parse HEAD)"
   git pull
+  git submodule update --init --recursive --quiet
   if [[ "$(git rev-parse HEAD)" != "$prev_head" ]]; then
     e_header "Changes detected, restarting script"
-    exec "$HOME/.dotfiles/bin/dotfiles" "restart"
+    exec "$0" "restart"
   fi
 fi
 
@@ -315,7 +313,7 @@ mkdir -p "$DOTFILES/caches/init"
 
 # If backups are needed, this is where they'll go.
 backup_dir="$DOTFILES/backups/$(date "+%Y_%m_%d-%H_%M_%S")/"
-backup=false
+backup=
 
 # Execute code for each file in these subdirectories.
 do_stuff "copy"

@@ -5,6 +5,9 @@ shopt -s nocaseglob
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# Case insensitive completion.
+bind "set completion-ignore-case on"
+
 export GREP_OPTIONS='--color=auto'
 
 # Prevent less from clearing the screen while still showing colors.

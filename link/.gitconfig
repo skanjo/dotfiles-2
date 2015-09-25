@@ -4,7 +4,7 @@
 	excludesfile = ~/.gitignore
 	autocrlf = input
 	ignorecase = false
-	editor = atom
+	editor = nano
 	pager = less -F -X
 	whitespace = trailing-space,space-before-tab,tab-in-indent
 [push]

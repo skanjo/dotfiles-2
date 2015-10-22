@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # bash/zsh completion support for core Git.
 #
 # Copyright (C) 2006,2007 Shawn O. Pearce <spearce@spearce.org>
@@ -981,7 +983,7 @@ _git_branch ()
 			"
 		;;
 	*)
-		if [ $only_local_ref = "y" -a $has_r = "n" ]; then
+		if [ $only_local_ref = "y" ] && [ $has_r = "n" ]; then
 			__gitcomp_nl "$(__git_heads)"
 		else
 			__gitcomp_nl "$(__git_refs)"

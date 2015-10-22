@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # My awesome bash prompt
 #
 # Copyright (c) 2012 "Cowboy" Ben Alman
@@ -50,7 +52,7 @@ function prompt_exitcode() {
 # Git status.
 function prompt_git() {
   prompt_getcolors
-  local status output flags branch
+  local status output flags
   status="$(git status 2>/dev/null)"
   [[ $? != 0 ]] && return;
   output="$(echo "$status" | awk '/# Initial commit/ {print "(init)"}')"
@@ -63,27 +65,6 @@ function prompt_git() {
         /^(# )?Untracked files:$/                {r=r "?"}\
       END {print r}'
   )"
-  if [[ "$flags" ]]; then
-    output="$output$c1:$c0$flags"
-  fi
-  echo "$c1[$c0$output$c1]$c9"
-}
-
-# hg status.
-function prompt_hg() {
-  prompt_getcolors
-  local summary output bookmark flags
-  summary="$(hg summary 2>/dev/null)"
-  [[ $? != 0 ]] && return;
-  output="$(echo "$summary" | awk '/branch:/ {print $2}')"
-  bookmark="$(echo "$summary" | awk '/bookmarks:/ {print $2}')"
-  flags="$(
-    echo "$summary" | awk 'BEGIN {r="";a=""} \
-      /(modified)/     {r= "+"}\
-      /(unknown)/      {a= "?"}\
-      END {print r a}'
-  )"
-  output="$output:$bookmark"
   if [[ "$flags" ]]; then
     output="$output$c1:$c0$flags"
   fi
@@ -104,20 +85,13 @@ function prompt_command() {
   # Manually load z here, after $? is checked, to keep $? from being clobbered.
   [[ "$(type -t _z)" ]] && _z --add "$(pwd -P 2>/dev/null)" 2>/dev/null
 
-  # While the simple_prompt environment var is set, disable the awesome prompt.
-  [[ "$simple_prompt" ]] && PS1='\n$ ' && return
-
   prompt_getcolors
   # http://twitter.com/cowboy/status/150254030654939137
   PS1="\n"
   # git: [branch:flags]
   PS1="$PS1$(prompt_git)"
-  # hg:  [branch:flags]
-  PS1="$PS1$(prompt_hg)"
-  # misc: [cmd#:hist#]
-  # PS1="$PS1$c1[$c0#\#$c1:$c0!\!$c1]$c9"
-  # path: [user@host:path]
-  PS1="$PS1$c1[$c0\u$c1@$c0\h$c1:$c0\w$c1]$c9"
+  # path: [path]
+  PS1="$PS1$c1[$c0\w$c1]$c9"
   PS1="$PS1\n"
   # date: [HH:MM:SS]
   PS1="$PS1$c1[$c0$(date +"%H$c1:$c0%M$c1:$c0%S")$c1]$c9"

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
 
@@ -14,13 +16,13 @@ export GREP_OPTIONS='--color=auto'
 export LESS=-XR
 
 # Set the terminal's title bar.
-function titlebar() {
-  echo -n $'\e]0;'"$*"$'\a'
+function titlebar () {
+    echo -n $'\e]0;'"$*"$'\a'
 }
 
 # SSH auto-completion based on entries in known_hosts.
 if [[ -e ~/.ssh/known_hosts ]]; then
-  complete -o default -W "$(cat ~/.ssh/known_hosts | sed 's/[, ].*//' | sort | uniq | grep -v -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}')" ssh scp sftp
+    complete -o default -W "$(cat ~/.ssh/known_hosts | sed 's/[, ].*//' | sort | uniq | grep -v -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}')" ssh scp sftp
 fi
 
 # Disable ansible cows }:]

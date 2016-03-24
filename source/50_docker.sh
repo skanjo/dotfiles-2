@@ -19,26 +19,9 @@ function docker-up () {
     __docker_configure
 }
 
-# Use `docker-cleanup --dry-run` to see what would be deleted.
-function docker-cleanup () {
-  EXITED=$(docker ps -q -f status=exited)
-  DANGLING=$(docker images -q -f "dangling=true")
-
-  if [ "$1" == "--dry-run" ]; then
-    echo "==> Would stop containers:"
-    echo $EXITED
-    echo "==> And images:"
-    echo $DANGLING
-  else
-    if [ -n "$EXITED" ]; then
-      docker rm -f $EXITED
-    else
-      echo "No containers to remove."
-    fi
-    if [ -n "$DANGLING" ]; then
-      docker rmi -f $DANGLING
-    else
-      echo "No images to remove."
-    fi
-  fi
+# See https://github.com/spotify/docker-gc.
+function docker-gc () {
+    FORCE_CONTAINER_REMOVAL=1 \
+    FORCE_IMAGE_REMOVAL=1 \
+    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock spotify/docker-gc
 }

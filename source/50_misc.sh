@@ -8,9 +8,7 @@ shopt -s nocaseglob
 shopt -s checkwinsize
 
 # Case insensitive completion.
-bind "set completion-ignore-case on"
-
-export GREP_OPTIONS='--color=auto'
+# bind "set completion-ignore-case on"
 
 # Prevent less from clearing the screen while still showing colors.
 export LESS=-XR
@@ -22,8 +20,16 @@ function titlebar () {
 
 # SSH auto-completion based on entries in known_hosts.
 if [[ -e ~/.ssh/known_hosts ]]; then
-    complete -o default -W "$(cat ~/.ssh/known_hosts | sed 's/[, ].*//' | sort | uniq | grep -v -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}')" ssh scp sftp
+    complete -o default -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh scp sftp
 fi
 
 # Disable ansible cows }:]
 export ANSIBLE_NOCOWS=1
+
+ # Load RVM into a shell session *as a function*
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
+# Add RVM to PATH for scripting
+if [[ -x ~/.rvm/bin ]]; then
+  export PATH="$PATH:$HOME/.rvm/bin"
+fi

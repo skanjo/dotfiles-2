@@ -18,6 +18,10 @@ function titlebar () {
     echo -n $'\e]0;'"$*"$'\a'
 }
 
+# Use bash-completion, if available
+[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
+    . /usr/share/bash-completion/bash_completion
+
 # SSH auto-completion based on entries in known_hosts.
 if [[ -e ~/.ssh/known_hosts ]]; then
     complete -o default -W "$(echo `cat ~/.ssh/known_hosts | cut -d ' ' -f 1 | tr ',' "\n" | uniq`;)" ssh scp sftp

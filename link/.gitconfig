@@ -39,3 +39,4 @@
 	helper = store
 [credential "https://git-codecommit.us-east-1.amazonaws.com"]
     helper = !aws codecommit credential-helper $@
+    useHttpPath = true # Looks like the path is used by the credential-helper.

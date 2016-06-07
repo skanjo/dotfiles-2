@@ -31,3 +31,11 @@
 	diff = auto
 	interactive = auto
 	status = auto
+[credential "http://Samuel.Parkinson@git.svc.ft.com"]
+	helper = cache --timeout=18000
+[credential "https://github.com"]
+	helper = store
+[credential "https://gist.github.com"]
+	helper = store
+[credential "https://git-codecommit.us-east-1.amazonaws.com"]
+    helper = !aws codecommit credential-helper $@

@@ -300,7 +300,10 @@ __git_ls_files_helper ()
 #    slash.
 __git_index_files ()
 {
-	local dir="$(__gitdir)" root="${2-.}" file
+	local dir root file
+
+	dir="$(__gitdir)"
+	root="${2-.}"
 
 	if [ -d "$dir" ]; then
 		__git_ls_files_helper "$root" "$1" |
@@ -315,7 +318,8 @@ __git_index_files ()
 
 __git_heads ()
 {
-	local dir="$(__gitdir)"
+	local dir
+	dir="$(__gitdir)"
 	if [ -d "$dir" ]; then
 		git --git-dir="$dir" for-each-ref --format='%(refname:short)' \
 			refs/heads
@@ -325,7 +329,8 @@ __git_heads ()
 
 __git_tags ()
 {
-	local dir="$(__gitdir)"
+	local dir
+	dir="$(__gitdir)"
 	if [ -d "$dir" ]; then
 		git --git-dir="$dir" for-each-ref --format='%(refname:short)' \
 			refs/tags
@@ -338,8 +343,11 @@ __git_tags ()
 # by checkout for tracking branches
 __git_refs ()
 {
-	local i hash dir="$(__gitdir "${1-}")" track="${2-}"
-	local format refs
+	local i hash dir track format refs
+
+	dir="$(__gitdir "${1-}")"
+	track="${2-}"
+
 	if [ -d "$dir" ]; then
 		case "$cur" in
 		refs|refs/*)
@@ -413,7 +421,8 @@ __git_refs_remotes ()
 
 __git_remotes ()
 {
-	local d="$(__gitdir)"
+	local d
+	d="$(__gitdir)"
 	test -d "$d/remotes" && ls -1 "$d/remotes"
 	git --git-dir="$d" remote
 }
@@ -764,8 +773,11 @@ __git_aliases ()
 # __git_aliased_command requires 1 argument
 __git_aliased_command ()
 {
-	local word cmdline=$(git --git-dir="$(__gitdir)" \
+	local word cmdline
+
+	cmdline=$(git --git-dir="$(__gitdir)" \
 		config --get "alias.$1")
+
 	for word in $cmdline; do
 		case "$word" in
 		\!gitk|gitk)
@@ -777,7 +789,7 @@ __git_aliased_command ()
 		*=*)	: setting env ;;
 		git)	: git itself ;;
 		\(\))   : skip parens of shell function definition ;;
-		{)	: skip start of shell helper function ;;
+		'{')	: skip start of shell helper function ;;
 		:)	: skip null command ;;
 		\'*)	: skip opening quote after sh -c ;;
 		*)
@@ -856,7 +868,8 @@ __git_whitespacelist="nowarn warn error error-all fix"
 
 _git_am ()
 {
-	local dir="$(__gitdir)"
+	local dir
+	dir="$(__gitdir)"
 	if [ -d "$dir"/rebase-apply ]; then
 		__gitcomp "--skip --continue --resolved --abort"
 		return
@@ -937,8 +950,11 @@ _git_bisect ()
 {
 	__git_has_doubledash && return
 
-	local subcommands="start bad good skip reset visualize replay log run"
-	local subcommand="$(__git_find_on_cmdline "$subcommands")"
+	local subcommands subcommand
+
+	subcommands="start bad good skip reset visualize replay log run"
+	subcommand="$(__git_find_on_cmdline "$subcommands")"
+
 	if [ -z "$subcommand" ]; then
 		if [ -f "$(__gitdir)"/BISECT_START ]; then
 			__gitcomp "$subcommands"
@@ -1045,7 +1061,8 @@ _git_cherry ()
 
 _git_cherry_pick ()
 {
-	local dir="$(__gitdir)"
+	local dir
+	dir="$(__gitdir)"
 	if [ -f "$dir"/CHERRY_PICK_HEAD ]; then
 		__gitcomp "--continue --quit --abort"
 		return
@@ -1427,8 +1444,11 @@ _git_log ()
 {
 	__git_has_doubledash && return
 
-	local g="$(git rev-parse --git-dir 2>/dev/null)"
-	local merge=""
+	local g merge
+
+	g="$(git rev-parse --git-dir 2>/dev/null)"
+	merge=''
+
 	if [ -f "$g/MERGE_HEAD" ]; then
 		merge="--merge"
 	fi
@@ -1527,7 +1547,7 @@ _git_mv ()
 		;;
 	esac
 
-	if [ $(__git_count_arguments "mv") -gt 0 ]; then
+	if [ "$(__git_count_arguments "mv")" -gt 0 ]; then
 		# We need to show both cached and untracked files (including
 		# empty directories) since this may not be the last argument.
 		__git_complete_index_file "--cached --others --directory"
@@ -1543,8 +1563,10 @@ _git_name_rev ()
 
 _git_notes ()
 {
-	local subcommands='add append copy edit list prune remove show'
-	local subcommand="$(__git_find_on_cmdline "$subcommands")"
+	local subcommands subcommand
+
+	subcommands='add append copy edit list prune remove show'
+	subcommand="$(__git_find_on_cmdline "$subcommands")"
 
 	case "$subcommand,$cur" in
 	,--*)
@@ -1667,7 +1689,8 @@ _git_push ()
 
 _git_rebase ()
 {
-	local dir="$(__gitdir)"
+	local dir
+	dir="$(__gitdir)"
 	if [ -f "$dir"/rebase-merge/interactive ]; then
 		__gitcomp "--continue --skip --abort --edit-todo"
 		return
@@ -1698,8 +1721,10 @@ _git_rebase ()
 
 _git_reflog ()
 {
-	local subcommands="show delete expire"
-	local subcommand="$(__git_find_on_cmdline "$subcommands")"
+	local subcommands subcommand
+
+	subcommands="show delete expire"
+	subcommand="$(__git_find_on_cmdline "$subcommands")"
 
 	if [ -z "$subcommand" ]; then
 		__gitcomp "$subcommands"
@@ -1761,7 +1786,7 @@ _git_stage ()
 
 __git_config_get_set_variables ()
 {
-	local prevword word config_file= c=$cword
+	local prevword word config_file='' c=$cword
 	while [ $c -gt 1 ]; do
 		word="${words[c]}"
 		case "$word" in
@@ -2238,8 +2263,11 @@ _git_config ()
 
 _git_remote ()
 {
-	local subcommands="add rename remove set-head set-branches set-url show prune update"
-	local subcommand="$(__git_find_on_cmdline "$subcommands")"
+	local subcommands subcommand
+
+	subcommands="add rename remove set-head set-branches set-url show prune update"
+	subcommand="$(__git_find_on_cmdline "$subcommands")"
+
 	if [ -z "$subcommand" ]; then
 		__gitcomp "$subcommands"
 		return
@@ -2280,7 +2308,8 @@ _git_reset ()
 
 _git_revert ()
 {
-	local dir="$(__gitdir)"
+	local dir
+	dir="$(__gitdir)"
 	if [ -f "$dir"/REVERT_HEAD ]; then
 		__gitcomp "--continue --quit --abort"
 		return
@@ -2366,9 +2395,12 @@ _git_show_branch ()
 
 _git_stash ()
 {
-	local save_opts='--keep-index --no-keep-index --quiet --patch'
-	local subcommands='save list show apply clear drop pop create branch'
-	local subcommand="$(__git_find_on_cmdline "$subcommands")"
+	local save_opts subcommands subcommand
+
+	save_opts='--keep-index --no-keep-index --quiet --patch'
+	subcommands='save list show apply clear drop pop create branch'
+	subcommand="$(__git_find_on_cmdline "$subcommands")"
+
 	if [ -z "$subcommand" ]; then
 		case "$cur" in
 		--*)

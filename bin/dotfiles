@@ -24,10 +24,10 @@ exit; fi
 export DOTFILES=~/.dotfiles
 
 # Logging stuff.
-function e_header()   { echo -e "\n\033[1m$@\033[0m"; }
-function e_success()  { echo -e " \033[1;32m✔\033[0m  $@"; }
-function e_error()    { echo -e " \033[1;31m✖\033[0m  $@"; }
-function e_arrow()    { echo -e " \033[1;34m➜\033[0m  $@"; }
+function e_header()   { echo -e "\n\033[1m$*\033[0m"; }
+function e_success()  { echo -e " \033[1;32m✔\033[0m  $*"; }
+function e_error()    { echo -e " \033[1;31m✖\033[0m  $*"; }
+function e_arrow()    { echo -e " \033[1;34m➜\033[0m  $*"; }
 
 # For testing.
 function assert() {
@@ -47,7 +47,7 @@ function is_ubuntu() {
 }
 function get_os() {
   for os in osx ubuntu; do
-    is_$os; [[ $? == ${1:-0} ]] && echo $os
+    is_$os; [[ $? == "${1:-0}" ]] && echo $os
   done
 }
 
@@ -65,7 +65,7 @@ function path_remove() {
 # Display a fancy multi-select menu.
 # Inspired by http://serverfault.com/a/298312
 function prompt_menu() {
-  local exitcode prompt choices nums i n
+  local exitcode prompt nums i n
   exitcode=0
   if [[ "$2" ]]; then
     _prompt_menu_draws "$1"
@@ -282,7 +282,6 @@ fi
 # Initialize.
 if [[ ! -d $DOTFILES ]]; then
   # $DOTFILES directory doesn't exist? Clone it!
-  new_dotfiles_install=1
   prompt_delay=15
   e_header "Downloading dotfiles"
   git clone --recursive git://github.com/${github_user:-cowboy}/dotfiles.git $DOTFILES

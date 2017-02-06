@@ -46,6 +46,7 @@ alias prompt_getcolors='prompt_colors[9]=; local i; for i in ${!prompt_colors[@]
 # Exit code of previous command.
 function prompt_exitcode() {
   prompt_getcolors
+  # shellcheck disable=SC2154
   [[ $1 != 0 ]] && echo " $c2$1$c9"
 }
 
@@ -66,6 +67,7 @@ function prompt_git() {
       END {print r}'
   )"
   if [[ "$flags" ]]; then
+    # shellcheck disable=SC2154
     output="$output$c1:$c0$flags"
   fi
   echo "$c1[$c0$output$c1]$c9"

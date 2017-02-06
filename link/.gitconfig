@@ -31,12 +31,14 @@
 	diff = auto
 	interactive = auto
 	status = auto
-[credential "http://Samuel.Parkinson@git.svc.ft.com"]
+[credential "http://git.svc.ft.com"]
 	helper = cache --timeout=18000
 [credential "https://github.com"]
-	helper = store
+	helper = store # Store only an application token with limited permissions.
 [credential "https://gist.github.com"]
-	helper = store
+	helper = store # Store only an application token with limited permissions.
 [credential "https://git-codecommit.us-east-1.amazonaws.com"]
     helper = !aws codecommit credential-helper $@
     useHttpPath = true # Looks like the path is used by the credential-helper.
+[url "https://"]
+	insteadOf = git://

@@ -23,25 +23,27 @@ function titlebar () {
     . /usr/share/bash-completion/bash_completion
 
 # SSH auto-completion based on entries in known_hosts.
-if [[ -e ~/.ssh/known_hosts ]]; then
+if [[ -f ~/.ssh/known_hosts ]]; then
     complete -o default -W "$(echo "$(cat ~/.ssh/known_hosts | cut -d ' ' -f 1 | tr ',' "\n" | uniq)";)" ssh scp sftp
 fi
 
 # Disable ansible cows }:]
 export ANSIBLE_NOCOWS=1
 
- # Load RVM into a shell session *as a function*
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+# Load RVM into a shell session *as a function*
+[[ -x ~/.rvm/scripts/rvm ]] && source ~/.rvm/scripts/rvm
 
 # Add RVM to PATH for scripting
-if [[ -x ~/.rvm/bin ]]; then
-  export PATH="$PATH:$HOME/.rvm/bin"
-fi
+[[ -d ~/.rvm/bin ]] && export PATH=$PATH:~/.rvm/bin
 
 # Load node version manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" --no-use && nvm use system > /dev/null
+if [[ -x ~/.nvm/nvm.sh ]]; then
+  export NVM_DIR=~/.nvm
+  export PATH="./node_modules/.bin:$PATH"
+  source ~/.nvm/nvm.sh --no-use
+  nvm use system > /dev/null
+fi
 
-if [[ -x ~/.cargo/bin ]]; then
-  export PATH="$HOME/.cargo/bin:$PATH"
+if [[ -d ~/.cargo/bin ]]; then
+  export PATH=~/.cargo/bin:$PATH
 fi

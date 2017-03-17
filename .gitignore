@@ -7,6 +7,3 @@
 /link/.ssh/id_*
 /link/.ssh/*.pem
 /link/.ssh/known_hosts
-
-# Ignore any file with LOCAL in the name (good for per-machine vars/functions)
-*LOCAL*

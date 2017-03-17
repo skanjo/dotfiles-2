@@ -1,5 +1,5 @@
 [include]
-    path = ~/.gitconfig.local
+	path = ~/.gitconfig.local
 [core]
 	excludesfile = ~/.gitignore
 	autocrlf = input
@@ -38,7 +38,7 @@
 [credential "https://gist.github.com"]
 	helper = store # Store only an application token with limited permissions.
 [credential "https://git-codecommit.us-east-1.amazonaws.com"]
-    helper = !aws codecommit credential-helper $@
-    useHttpPath = true # Looks like the path is used by the credential-helper.
+	helper = !aws codecommit credential-helper $@
+	useHttpPath = true # The path is used by this credential-helper.
 [url "https://"]
 	insteadOf = git://

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+path=$1
+shift
+cmd=$*
+
+last_modified=$(stat -f %c ${path})
+
+tick() {
+  if [[ "${last_modified}" != "$(stat -f %c ${path})" ]]; then
+    echo -en "change detected, running command...\n\n"
+    $cmd
+    last_modified=$(stat -f %c ${path})
+    echo -en "\n--> resumed watching"
+  fi
+}
+
+echo -en "--> watching \"$path\""
+
+while true; do
+  tick
+  sleep 1
+done

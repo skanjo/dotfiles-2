@@ -7,13 +7,17 @@
 	editor = nano
 	pager = less -F -X
 	whitespace = trailing-space,space-before-tab,tab-in-indent
+[merge]
+	ff = only
 [push]
 	default = current
+	followTags = true
+[diff]
+	tool = icdiff
 [difftool]
 	prompt = false
-[mergetool]
-	prompt = false
-	keepBackup = false
+[difftool "icdiff"]
+	cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
 [rerere]
 	enabled = true
 [alias]

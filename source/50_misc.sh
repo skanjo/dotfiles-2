@@ -44,6 +44,8 @@ if [[ -x ~/.nvm/nvm.sh ]]; then
   nvm use system > /dev/null
 fi
 
-if [[ -d ~/.cargo/bin ]]; then
-  export PATH=~/.cargo/bin:$PATH
-fi
+# Rust Cargo support.
+[[ -d ~/.cargo/bin ]] && export PATH=~/.cargo/bin:$PATH
+
+# Yarn support.
+[[ -d ~/.yarn ]] && export PATH="$(yarn global bin):$PATH"

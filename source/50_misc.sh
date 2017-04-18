@@ -15,7 +15,7 @@ export LESS=-XR
 
 # Set the terminal's title bar.
 function titlebar () {
-    echo -n $'\e]0;'"$*"$'\a'
+  echo -n $'\e]0;'"$*"$'\a'
 }
 
 # Use bash-completion, if available
@@ -24,7 +24,7 @@ function titlebar () {
 
 # SSH auto-completion based on entries in known_hosts.
 if [[ -f ~/.ssh/known_hosts ]]; then
-    complete -o default -W "$(echo "$(cat ~/.ssh/known_hosts | cut -d ' ' -f 1 | tr ',' "\n" | uniq)";)" ssh scp sftp
+  complete -o default -W "$(echo "$(cat ~/.ssh/known_hosts | cut -d ' ' -f 1 | tr ',' "\n" | uniq)";)" ssh scp sftp
 fi
 
 # Disable ansible cows }:]

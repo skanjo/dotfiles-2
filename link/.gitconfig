@@ -7,8 +7,6 @@
 	editor = nano
 	pager = less -F -X
 	whitespace = trailing-space,space-before-tab,tab-in-indent
-[merge]
-	ff = only
 [push]
 	default = current
 	followTags = true

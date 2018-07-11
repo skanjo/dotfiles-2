@@ -15,7 +15,7 @@
 [difftool]
 	prompt = false
 [difftool "icdiff"]
-	cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
+	cmd = icdiff --line-numbers $LOCAL $REMOTE | less -X -F
 [rerere]
 	enabled = true
 [alias]
@@ -33,14 +33,17 @@
 	diff = auto
 	interactive = auto
 	status = auto
-[credential "http://git.svc.ft.com"]
-	helper = cache --timeout=18000
 [credential "https://github.com"]
-	helper = store # Store only an application token with limited permissions.
+	helper = osxkeychain
 [credential "https://gist.github.com"]
-	helper = store # Store only an application token with limited permissions.
-[credential "https://git-codecommit.us-east-1.amazonaws.com"]
-	helper = !aws codecommit credential-helper $@
-	useHttpPath = true # The path is used by this credential-helper.
+	helper = osxkeychain
 [url "https://"]
 	insteadOf = git://
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Samuel Parkinson
+	email = 51677+sjparkinson@users.noreply.github.com

@@ -24,28 +24,28 @@ function titlebar () {
 
 # SSH auto-completion based on entries in known_hosts.
 if [[ -f ~/.ssh/known_hosts ]]; then
-  complete -o default -W "$(echo "$(cat ~/.ssh/known_hosts | cut -d ' ' -f 1 | tr ',' "\n" | uniq)";)" ssh scp sftp
+  complete -o default -W "$(cut -d ' ' -f 1 < ~/.ssh/known_hosts | tr ',' "\\n" | uniq)" ssh scp sftp
 fi
 
 # Disable ansible cows }:]
 export ANSIBLE_NOCOWS=1
 
-# Load RVM into a shell session *as a function*
-[[ -x ~/.rvm/scripts/rvm ]] && source ~/.rvm/scripts/rvm
-
-# Add RVM to PATH for scripting
-[[ -d ~/.rvm/bin ]] && export PATH=$PATH:~/.rvm/bin
+# RVM support.
+[[ -d ~/.rvm ]] && source "$HOME/.rvm/scripts/rvm" && export PATH="$HOME/.rvm/bin:$PATH"
 
 # Load node version manager
-if [[ -x ~/.nvm/nvm.sh ]]; then
-  export NVM_DIR=~/.nvm
-  export PATH="./node_modules/.bin:$PATH"
-  source ~/.nvm/nvm.sh --no-use
-  nvm use system > /dev/null
-fi
+export NVM_DIR="$HOME/.nvm" 
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" # This loads nvm
+
+# Include node_modules/.bin in the path.
+export PATH="node_modules/.bin:$PATH"
 
 # Rust Cargo support.
-[[ -d ~/.cargo/bin ]] && export PATH=~/.cargo/bin:$PATH
+[[ -d ~/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
 # Yarn support.
-[[ -d ~/.yarn ]] && export PATH="$(yarn global bin):$PATH"
+[[ -d ~/.yarn ]] && export PATH="$(yarn global bin):$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# Go lang development support.
+export GOPATH="$HOME/Repositories/go"
+export PATH="$GOPATH/bin:$PATH"

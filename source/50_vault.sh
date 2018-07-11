@@ -1,10 +1,23 @@
 #!/bin/bash
 
 export VAULT_ADDR=https://vault.in.ft.com
-export VAULT_AUTH_GITHUB_TOKEN="$(security find-generic-password -a ${USER} -s vault -w)"
+export VAULT_AUTH_METHOD=github
+
+if is_osx; then
+  export VAULT_AUTH_GITHUB_TOKEN="$(security find-generic-password -a $USER -s 'FT Vault' -w)"
+fi
 
 function vault () {
+  # Use exported login method if available.
+  if [[ $1 == login ]] && [[ -n $VAULT_AUTH_METHOD ]]; then
+    command vault login --method $VAULT_AUTH_METHOD;
+    return 0;
+  fi
+
+  # Run the normal vault command.
   command vault "$@"
+
+  # If it was a write, delete it from history.
   if [[ $1 == write ]]; then history -d $((HISTCMD-1)) &> /dev/null; fi
 }
 
